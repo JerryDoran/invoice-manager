@@ -5,7 +5,7 @@ import { requireUser } from '@/hooks/require-user';
 export default async function DashboardPage() {
   const session = await requireUser();
   return (
-    <div>
+    <main>
       Dashboard Page
       <form
         action={async () => {
@@ -15,6 +15,6 @@ export default async function DashboardPage() {
       >
         <button type='submit'>Sign Out</button>
       </form>
-    </div>
+    </main>
   );
 }
