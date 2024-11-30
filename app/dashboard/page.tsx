@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { signOut } from '@/auth';
 import { requireUser } from '@/hooks/require-user';
 
