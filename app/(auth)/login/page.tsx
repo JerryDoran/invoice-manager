@@ -44,7 +44,7 @@ export default async function LoginPage() {
                   required
                 />
               </div>
-              <SubmitButton />
+              <SubmitButton title='Login' />
             </form>
           </CardContent>
         </Card>
