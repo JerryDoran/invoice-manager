@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use server';
 
 import { parseWithZod } from '@conform-to/zod';
@@ -6,7 +7,10 @@ import { requireUser } from '@/hooks/require-user';
 import { onboardingSchema } from '@/lib/zod-schemas';
 import prisma from '@/db';
 
-export async function onboardUserAction(formData: FormData) {
+export async function onboardUserAction(
+  prevState: unknown,
+  formData: FormData
+) {
   const session = await requireUser();
 
   const submission = parseWithZod(formData, {

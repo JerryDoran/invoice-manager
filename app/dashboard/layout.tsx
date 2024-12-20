@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { redirect } from 'next/navigation';
 import { requireUser } from '@/hooks/require-user';
 import Link from 'next/link';
 import logo2 from '@/public/logo.svg';
@@ -22,6 +23,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ModeToggle } from '@/components/mode-toggle';
 import { signOut } from '@/auth';
+import prisma from '@/db';
+
+// Need to check that the user actually finished the onboarding process
+async function getUser(userId: string) {
+  const data = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      firstName: true,
+      lastName: true,
+      address: true,
+    },
+  });
+
+  if (!data?.firstName || !data?.lastName || !data?.address) {
+    redirect('/onboarding');
+  }
+  return data;
+}
 
 export default async function DashboardLayout({
   children,
@@ -29,6 +50,9 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const session = await requireUser();
+
+  const data = await getUser(session.user?.id as string);
+
   return (
     <>
       <div className='grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]'>

@@ -1,3 +1,10 @@
+'use client';
+
+import { useForm } from '@conform-to/react';
+import { parseWithZod } from '@conform-to/zod';
+import { onboardUserAction } from '@/actions/onboard-user-action';
+import { onboardingSchema } from '@/lib/zod-schemas';
+
 import SubmitButton from '@/components/submit-button';
 import {
   Card,
@@ -8,8 +15,26 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useActionState } from 'react';
 
 export default function OnboardingPage() {
+  // Get the data from the action into my form
+  const [lastResult, formAction] = useActionState(onboardUserAction, undefined);
+
+  const [form, fields] = useForm({
+    // sync result with the last submission with client side state
+    lastResult,
+
+    // Reuse the validation logic on the client
+    onValidate({ formData }) {
+      return parseWithZod(formData, {
+        schema: onboardingSchema,
+      });
+    },
+    shouldValidate: 'onBlur',
+    shouldRevalidate: 'onInput',
+  });
+
   return (
     <div className='min-h-screen w-screen flex items-center justify-center'>
       <Card className='max-w-sm mx-auto'>
@@ -20,20 +45,46 @@ export default function OnboardingPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className='grid gap-4'>
+          <form
+            className='grid gap-4'
+            action={formAction}
+            id={form.id}
+            onSubmit={form.onSubmit}
+            noValidate
+          >
             <div className='flex gap-4'>
               <div className='flex flex-col gap-2'>
                 <Label>First Name</Label>
-                <Input placeholder='John' />
+                <Input
+                  name={fields.firstName.name}
+                  key={fields.firstName.key}
+                  defaultValue={fields.firstName.initialValue}
+                  placeholder='John'
+                />
+                <p className='text-xs text-red-500'>
+                  {fields.firstName.errors}
+                </p>
               </div>
               <div className='flex flex-col gap-2'>
                 <Label>Last Name</Label>
-                <Input placeholder='Doe' />
+                <Input
+                  name={fields.lastName.name}
+                  key={fields.lastName.key}
+                  defaultValue={fields.lastName.initialValue}
+                  placeholder='Doe'
+                />
+                <p className='text-xs text-red-500'>{fields.lastName.errors}</p>
               </div>
             </div>
             <div className='flex flex-col gap-2'>
               <Label>Address</Label>
-              <Input placeholder='999 Park Place, New York, NY 12345' />
+              <Input
+                name={fields.address.name}
+                key={fields.address.key}
+                defaultValue={fields.address.initialValue}
+                placeholder='999 Park Place, New York, NY 12345'
+              />
+              <p className='text-xs text-red-500'>{fields.address.errors}</p>
             </div>
             <SubmitButton title='Complete Onboarding'></SubmitButton>
           </form>
