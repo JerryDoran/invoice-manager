@@ -9,7 +9,7 @@ export default function SubmitButton({ title = 'Login' }: { title?: string }) {
   return (
     <>
       {pending ? (
-        <Button disabled={pending} className='w-full'>
+        <Button disabled={pending} className=''>
           <Loader2 className='size-4 mr-2 animate-spin' /> Submitting...
         </Button>
       ) : (
