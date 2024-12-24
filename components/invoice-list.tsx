@@ -40,7 +40,7 @@ export async function InvoiceList() {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Invoice #</TableHead>
+          <TableHead>Invoice ID</TableHead>
           <TableHead>Client</TableHead>
           <TableHead>Amount</TableHead>
           <TableHead>Status</TableHead>

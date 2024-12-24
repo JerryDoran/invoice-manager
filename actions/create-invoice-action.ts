@@ -7,6 +7,8 @@ import { redirect } from 'next/navigation';
 import { requireUser } from '@/hooks/require-user';
 import { invoiceSchema } from '@/lib/zod-schemas';
 import prisma from '@/db';
+import { emailClient } from '@/lib/mailtrap';
+import { formatCurrency } from '@/lib/utils';
 
 export async function createInvoiceAction(prevState: any, formData: FormData) {
   // console.log('Server Action - Form Data:', Object.fromEntries(formData));
@@ -45,6 +47,33 @@ export async function createInvoiceAction(prevState: any, formData: FormData) {
       invoiceItemQuantity: submission.value.invoiceItemQuantity,
       invoiceItemRate: submission.value.invoiceItemRate,
       userId: session.user?.id,
+    },
+  });
+
+  const sender = {
+    email: 'hello@thewebarchitech.com',
+    name: 'Jerry Doran',
+  };
+
+  emailClient.send({
+    from: sender,
+    to: [
+      {
+        email: submission.value.clientEmail,
+      },
+    ],
+    template_uuid: 'ea3d7ec2-34fd-4a95-ae60-8d90edd013f6',
+    template_variables: {
+      clientName: submission.value.clientName,
+      invoiceNumber: submission.value.invoiceNumber,
+      dueDate: new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
+        new Date(submission.value.date)
+      ),
+      invoiceAmount: formatCurrency({
+        amount: submission.value.total,
+        currency: submission.value.currency as any,
+      }),
+      invoiceLink: 'Test_InvoiceLink',
     },
   });
 

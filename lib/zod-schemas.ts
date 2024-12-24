@@ -8,7 +8,7 @@ export const onboardingSchema = z.object({
 
 export const invoiceSchema = z.object({
   invoiceName: z.string().min(1, 'Invoice name is required'),
-  total: z.number().min(1, 'One dollar is minimum required'),
+  total: z.number().min(1, 'Total is required'),
   status: z.enum(['PAID', 'PENDING', 'CANCELED']).default('PENDING'),
   date: z.string().min(1, 'Date is required'),
   dueDate: z.number().min(1, 'Due date is required'),

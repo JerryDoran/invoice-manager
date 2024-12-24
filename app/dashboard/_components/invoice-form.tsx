@@ -33,9 +33,9 @@ export function CreateInvoiceForm() {
   const [quantity, setQuantity] = useState('');
   const [currency, setCurrency] = useState('USD');
 
-  const subTotal = (Number(rate) || 0) * (Number(quantity) || 0);
+  const totalAmount = (Number(rate) || 0) * (Number(quantity) || 0);
 
-  const totalAmount = subTotal + subTotal * 0.15;
+  // const totalAmount = subTotal + subTotal * 0.15;
 
   const [lastResult, formAction] = useActionState(
     createInvoiceAction,
@@ -295,7 +295,7 @@ export function CreateInvoiceForm() {
               <div className='col-span-2'>
                 <Input
                   value={formatCurrency({
-                    amount: subTotal,
+                    amount: totalAmount,
                     currency: currency as any,
                   })}
                   disabled
@@ -309,7 +309,7 @@ export function CreateInvoiceForm() {
                 <span>Subtotal</span>
                 <span>
                   {formatCurrency({
-                    amount: subTotal,
+                    amount: totalAmount,
                     currency: currency as any,
                   })}
                 </span>
