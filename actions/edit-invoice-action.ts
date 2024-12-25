@@ -10,7 +10,7 @@ import prisma from '@/db';
 import { emailClient } from '@/lib/mailtrap';
 import { formatCurrency } from '@/lib/utils';
 
-export async function createInvoiceAction(prevState: any, formData: FormData) {
+export async function editInvoiceAction(prevState: any, formData: FormData) {
   // console.log('Server Action - Form Data:', Object.fromEntries(formData));
   const session = await requireUser();
   console.log('Server Action - User Session:', session);

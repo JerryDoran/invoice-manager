@@ -1,14 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 'use client';
 
+import { useActionState, useState } from 'react';
+import { useForm } from '@conform-to/react';
+import { parseWithZod } from '@conform-to/zod';
+import { invoiceSchema } from '@/lib/zod-schemas';
+import { formatCurrency } from '@/lib/utils';
+
 import SubmitButton from '@/components/submit-button';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Popover } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -17,42 +25,28 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
 import { CalendarIcon } from 'lucide-react';
-import { useActionState, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { editInvoiceAction } from '@/actions/edit-invoice-action';
+import { Prisma } from '@prisma/client';
+import { Badge } from '@/components/ui/badge';
+import { Calendar } from '@/components/ui/calendar';
 
-import { createInvoiceAction } from '@/actions/create-invoice-action';
-import { useForm } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
-import { invoiceSchema } from '@/lib/zod-schemas';
-import { formatCurrency } from '@/lib/utils';
-
-type CreateInvoiceFormProps = {
-  firstName: string;
-  lastName: string;
-  address: string;
-  email: string;
+type EditInvoiceProps = {
+  invoice: Prisma.InvoiceGetPayload<{}>;
 };
 
-export function CreateInvoiceForm({
-  firstName,
-  lastName,
-  email,
-  address,
-}: CreateInvoiceFormProps) {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [rate, setRate] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [currency, setCurrency] = useState('USD');
+export function EditInvoice({ invoice }: EditInvoiceProps) {
+  const [selectedDate, setSelectedDate] = useState(invoice.date);
+  const [rate, setRate] = useState(invoice.invoiceItemRate.toString());
+  const [quantity, setQuantity] = useState(
+    invoice.invoiceItemQuantity.toString()
+  );
+  const [currency, setCurrency] = useState(invoice.currency);
 
   const totalAmount = (Number(rate) || 0) * (Number(quantity) || 0);
 
-  // const totalAmount = subTotal + subTotal * 0.15;
-
-  const [lastResult, formAction] = useActionState(
-    createInvoiceAction,
-    undefined
-  );
+  const [lastResult, formAction] = useActionState(editInvoiceAction, undefined);
 
   const [form, fields] = useForm({
     lastResult, // sync result with the last submission on server with client side state
@@ -67,7 +61,6 @@ export function CreateInvoiceForm({
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
   });
-
   return (
     <Card className='w-full max-w-4xl mx-auto'>
       <form
@@ -89,7 +82,7 @@ export function CreateInvoiceForm({
               <Input
                 name={fields.invoiceName.name}
                 key={fields.invoiceName.key}
-                defaultValue={fields.invoiceName.initialValue}
+                defaultValue={invoice.invoiceName}
                 placeholder='Test 123'
               />
               <p className='text-xs text-red-500'>
@@ -110,7 +103,7 @@ export function CreateInvoiceForm({
                   type='number'
                   name={fields.invoiceNumber.name}
                   key={fields.invoiceNumber.key}
-                  defaultValue={fields.invoiceNumber.initialValue}
+                  defaultValue={invoice.invoiceNumber}
                 />
               </div>
               <p className='text-xs text-red-500 mt-2'>
@@ -147,7 +140,7 @@ export function CreateInvoiceForm({
                   placeholder='Your Name'
                   name={fields.fromName.name}
                   key={fields.fromName.key}
-                  defaultValue={firstName + ' ' + lastName}
+                  defaultValue={invoice.fromName}
                 />
                 <p className='text-xs text-red-500 mt-2'>
                   {fields.fromName.errors}
@@ -157,7 +150,7 @@ export function CreateInvoiceForm({
                   type='email'
                   name={fields.fromEmail.name}
                   key={fields.fromEmail.key}
-                  defaultValue={email}
+                  defaultValue={invoice.fromEmail}
                 />
                 <p className='text-xs text-red-500 mt-2'>
                   {fields.fromEmail.errors}
@@ -166,7 +159,7 @@ export function CreateInvoiceForm({
                   placeholder='Your Address'
                   name={fields.fromAddress.name}
                   key={fields.fromAddress.key}
-                  defaultValue={address}
+                  defaultValue={invoice.fromAddress}
                 />
                 <p className='text-xs text-red-500 mt-2'>
                   {fields.fromAddress.errors}
@@ -179,7 +172,7 @@ export function CreateInvoiceForm({
                 <Input
                   name={fields.clientName.name}
                   key={fields.clientName.key}
-                  defaultValue={fields.clientName.initialValue}
+                  defaultValue={invoice.clientName}
                   placeholder='Client name'
                 />
                 <p className='text-xs text-red-500 mt-2'>
@@ -188,7 +181,7 @@ export function CreateInvoiceForm({
                 <Input
                   name={fields.clientEmail.name}
                   key={fields.clientEmail.key}
-                  defaultValue={fields.clientEmail.initialValue}
+                  defaultValue={invoice.clientEmail}
                   placeholder='Client email'
                 />
                 <p className='text-xs text-red-500 mt-2'>
@@ -197,7 +190,7 @@ export function CreateInvoiceForm({
                 <Input
                   name={fields.clientAddress.name}
                   key={fields.clientAddress.key}
-                  defaultValue={fields.clientAddress.initialValue}
+                  defaultValue={invoice.clientAddress}
                   placeholder='Client address'
                 />
                 <p className='text-xs text-red-500 mt-2'>
@@ -244,7 +237,7 @@ export function CreateInvoiceForm({
               <Select
                 name={fields.dueDate.name}
                 key={fields.dueDate.key}
-                defaultValue={fields.dueDate.initialValue}
+                defaultValue={invoice.dueDate.toString()}
               >
                 <SelectTrigger className=''>
                   <SelectValue placeholder='Select due date' />
@@ -272,7 +265,7 @@ export function CreateInvoiceForm({
                 <Textarea
                   name={fields.invoiceItemDescription.name}
                   key={fields.invoiceItemDescription.key}
-                  defaultValue={fields.invoiceItemDescription.initialValue}
+                  defaultValue={invoice.invoiceItemDescription}
                   placeholder='Item name & description'
                 />
                 <p className='text-xs text-red-500 mt-2'>
@@ -345,12 +338,12 @@ export function CreateInvoiceForm({
             <Textarea
               name={fields.note.name}
               key={fields.note.key}
-              defaultValue={fields.note.initialValue}
+              defaultValue={invoice.note ?? undefined}
               placeholder='Notes'
             />
           </div>
           <div className='flex items-center justify-end mt-6'>
-            <SubmitButton title='Send invoice to client' />
+            <SubmitButton title='Update invoice' />
           </div>
         </CardContent>
       </form>

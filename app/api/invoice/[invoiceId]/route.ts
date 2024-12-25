@@ -231,6 +231,15 @@ export async function GET(
   pdf.setFontSize(8);
   pdf.text('Invoice amount includes 15% sales tax', 5.2, 3.72);
 
+  // note
+  if (data.note) {
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(10);
+    pdf.text('NOTES:', 1, 6.3);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(data.note, 1, 6.5);
+  }
+
   // generate pdf as buffer
   const pdfBuffer = Buffer.from(pdf.output('arraybuffer'));
 

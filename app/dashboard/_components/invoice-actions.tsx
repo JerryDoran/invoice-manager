@@ -17,7 +17,11 @@ import {
   Trash,
 } from 'lucide-react';
 
-export function InvoiceActions() {
+type InvoiceActionsProps = {
+  id: string;
+};
+
+export function InvoiceActions({ id }: InvoiceActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,7 +32,7 @@ export function InvoiceActions() {
       <DropdownMenuContent align='end'>
         <DropdownMenuItem asChild>
           <Link
-            href={'/dashboard/invoices/edit'}
+            href={`/dashboard/invoices/edit/${id}`}
             className='text-muted-foreground'
           >
             <Edit className='size-4' />

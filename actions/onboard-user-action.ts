@@ -13,6 +13,7 @@ export async function onboardUserAction(
 ) {
   const session = await requireUser();
 
+
   const submission = parseWithZod(formData, {
     schema: onboardingSchema,
   });
