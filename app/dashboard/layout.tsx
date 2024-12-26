@@ -21,6 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Toaster } from '@/components/ui/sonner';
 import { ModeToggle } from '@/components/mode-toggle';
 import { signOut } from '@/auth';
 import prisma from '@/db';
@@ -131,6 +132,7 @@ export default async function DashboardLayout({
           </main>
         </div>
       </div>
+      <Toaster richColors closeButton theme='light' />
     </>
   );
 }

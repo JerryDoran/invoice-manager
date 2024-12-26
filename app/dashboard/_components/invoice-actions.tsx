@@ -16,12 +16,29 @@ import {
   MoreHorizontal,
   Trash,
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 type InvoiceActionsProps = {
   id: string;
 };
 
 export function InvoiceActions({ id }: InvoiceActionsProps) {
+  function handleSendReminder() {
+    toast.promise(
+      fetch(`/api/email/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }),
+      {
+        loading: 'Sending reminder email...',
+        success: 'Reminder email sent successfully',
+        error: 'Error sending reminder email',
+      }
+    );
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -41,25 +58,21 @@ export function InvoiceActions({ id }: InvoiceActionsProps) {
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link
-            href={'/dashboard/invoices/delete'}
+            href={`/api/invoice/${id}`}
+            target='_blank'
             className='text-muted-foreground'
           >
             <DownloadCloudIcon className='size-4' />
             Download Invoice
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link
-            href={'/dashboard/invoices/delete'}
-            className='text-muted-foreground'
-          >
-            <Mail className='size-4' />
-            Reminder Email
-          </Link>
+        <DropdownMenuItem onClick={handleSendReminder}>
+          <Mail className='size-4' />
+          Reminder Email
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link
-            href={'/dashboard/invoices/delete'}
+            href={`/dashboard/invoices/delete/${id}`}
             className='text-muted-foreground'
           >
             <Trash className='size-4' />

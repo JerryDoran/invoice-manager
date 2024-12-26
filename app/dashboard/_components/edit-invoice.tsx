@@ -51,7 +51,7 @@ export function EditInvoice({ invoice }: EditInvoiceProps) {
   const [form, fields] = useForm({
     lastResult, // sync result with the last submission on server with client side state
     onValidate({ formData }) {
-      // console.log('Form Data being validated:', Object.fromEntries(formData));
+      console.log('Form Data being validated:', Object.fromEntries(formData));
       const result = parseWithZod(formData, {
         schema: invoiceSchema,
       });
@@ -75,6 +75,7 @@ export function EditInvoice({ invoice }: EditInvoiceProps) {
           value={selectedDate.toISOString()} // converts a date object to a string
         />
         <input type='hidden' name={fields.total.name} value={totalAmount} />
+        <input type='hidden' name='id' value={invoice.id} />
         <CardContent className='p-6'>
           <div className='flex flex-col gap-2 w-fit mb-6'>
             <div className='flex items-center gap-3'>

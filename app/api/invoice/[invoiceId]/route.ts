@@ -112,7 +112,7 @@ export async function GET(
 
   // Item table
   const tableStartY = startY + lineHeight * 12;
-  const colWidths = [3.5, 1, 0.85, 0.95];
+  const colWidths = [3.5, 0.5, 1.1, 1.2];
   const rowHeight = 0.3;
   const textPadding = 0.15;
   const tableStartX = 1;
@@ -141,7 +141,11 @@ export async function GET(
   pdf.rect(currentX, tableStartY - rowHeight, colWidths[1], rowHeight, 'F');
   pdf.setDrawColor(0);
   pdf.rect(currentX, tableStartY - rowHeight, colWidths[1], rowHeight);
-  pdf.text('Quantity', currentX + textPadding, tableStartY - rowHeight / 3);
+  // Center "Qty" text
+  const qtyText = 'Qty';
+  const qtyTextWidth = pdf.getTextWidth(qtyText);
+  const qtyColCenter = currentX + colWidths[1] / 2 - qtyTextWidth / 2;
+  pdf.text('Qty', qtyColCenter, tableStartY - rowHeight / 3);
   currentX += colWidths[1];
 
   // Third header cell
@@ -205,25 +209,25 @@ export async function GET(
   // Total amount
   pdf.setFontSize(11);
   pdf.setFont('helvetica', 'bold');
-  pdf.text(`SubTotal (${data.currency}):`, 5, startY + lineHeight * 15);
+  pdf.text(`SubTotal (${data.currency}):`, 4.8, startY + lineHeight * 15);
   pdf.text(
     `${formatCurrency({
       amount: data.total,
       currency: data.currency as any,
     })}`,
-    6.5,
+    6.25,
     startY + lineHeight * 15
   );
 
   pdf.setFontSize(12);
   pdf.setFont('helvetica', 'bold');
-  pdf.text(`Total (${data.currency}):`, 5.21, startY + lineHeight * 17);
+  pdf.text(`Total (${data.currency}):`, 5, startY + lineHeight * 17);
   pdf.text(
     `${formatCurrency({
       amount: data.total * 1.15,
       currency: data.currency as any,
     })}`,
-    6.5,
+    6.25,
     startY + lineHeight * 17
   );
 

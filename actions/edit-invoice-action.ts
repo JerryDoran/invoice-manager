@@ -12,8 +12,10 @@ import { formatCurrency } from '@/lib/utils';
 
 export async function editInvoiceAction(prevState: any, formData: FormData) {
   // console.log('Server Action - Form Data:', Object.fromEntries(formData));
+
+  // Makes sure only authenticated users can edit an invoice
   const session = await requireUser();
-  console.log('Server Action - User Session:', session);
+  // console.log('Server Action - User Session:', session);
 
   const submission = parseWithZod(formData, {
     schema: invoiceSchema,
@@ -27,7 +29,11 @@ export async function editInvoiceAction(prevState: any, formData: FormData) {
     return submission.reply();
   }
 
-  const data = await prisma.invoice.create({
+  const data = await prisma.invoice.update({
+    where: {
+      id: formData.get('id') as string,
+      userId: session.user?.id,
+    },
     data: {
       invoiceName: submission.value.invoiceName,
       total: submission.value.total,
@@ -46,7 +52,6 @@ export async function editInvoiceAction(prevState: any, formData: FormData) {
       invoiceItemDescription: submission.value.invoiceItemDescription,
       invoiceItemQuantity: submission.value.invoiceItemQuantity,
       invoiceItemRate: submission.value.invoiceItemRate,
-      userId: session.user?.id,
     },
   });
 
@@ -62,7 +67,7 @@ export async function editInvoiceAction(prevState: any, formData: FormData) {
         email: submission.value.clientEmail,
       },
     ],
-    template_uuid: 'ea3d7ec2-34fd-4a95-ae60-8d90edd013f6',
+    template_uuid: '249a9270-e652-475c-a6b0-30c669c8c727',
     template_variables: {
       clientName: submission.value.clientName,
       invoiceNumber: submission.value.invoiceNumber,
