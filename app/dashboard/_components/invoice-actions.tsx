@@ -20,9 +20,10 @@ import { toast } from 'sonner';
 
 type InvoiceActionsProps = {
   id: string;
+  status: string;
 };
 
-export function InvoiceActions({ id }: InvoiceActionsProps) {
+export function InvoiceActions({ id, status }: InvoiceActionsProps) {
   function handleSendReminder() {
     toast.promise(
       fetch(`/api/email/${id}`, {
@@ -49,7 +50,7 @@ export function InvoiceActions({ id }: InvoiceActionsProps) {
       <DropdownMenuContent align='end'>
         <DropdownMenuItem asChild>
           <Link
-            href={`/dashboard/invoices/edit/${id}`}
+            href={`/dashboard/invoices/${id}/edit`}
             className='text-muted-foreground'
           >
             <Edit className='size-4' />
@@ -72,22 +73,24 @@ export function InvoiceActions({ id }: InvoiceActionsProps) {
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link
-            href={`/dashboard/invoices/delete/${id}`}
+            href={`/dashboard/invoices/${id}/delete`}
             className='text-muted-foreground'
           >
             <Trash className='size-4' />
             Delete Invoice
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link
-            href={'/dashboard/invoices/delete'}
-            className='text-muted-foreground'
-          >
-            <CheckCircle className='size-4' />
-            Mark as Paid
-          </Link>
-        </DropdownMenuItem>
+        {status !== 'PAID' && (
+          <DropdownMenuItem asChild>
+            <Link
+              href={`/dashboard/invoices/${id}/paid`}
+              className='text-muted-foreground'
+            >
+              <CheckCircle className='size-4' />
+              Mark as Paid
+            </Link>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

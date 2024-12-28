@@ -1,3 +1,7 @@
+import { Suspense } from 'react';
+import Link from 'next/link';
+import { PlusCircleIcon } from 'lucide-react';
+
 import { InvoiceList } from '@/components/invoice-list';
 import { buttonVariants } from '@/components/ui/button';
 import {
@@ -7,8 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { PlusCircleIcon } from 'lucide-react';
-import Link from 'next/link';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata = {
   title: 'Invoices',
@@ -33,7 +36,9 @@ export default function InvoicesPage() {
         </div>
       </CardHeader>
       <CardContent>
-        <InvoiceList />
+        <Suspense fallback={<Skeleton className='w-full h-[500px]' />}>
+          <InvoiceList />
+        </Suspense>
       </CardContent>
     </Card>
   );

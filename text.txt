@@ -1,0 +1,14 @@
+const transformedData = Object.entries(aggregatedData)
+    .map(([date, amount]) => ({
+      date,
+      amount,
+      originalDate: new Date(date + ', ' + new Date().getFullYear()),
+    }))
+    .sort((a, b) => a.originalDate.getTime() - b.originalDate.getTime())
+    .map((item) => ({
+      date: item.date,
+      amount: item.amount,
+    }));
+
+  return transformedData;
+}
