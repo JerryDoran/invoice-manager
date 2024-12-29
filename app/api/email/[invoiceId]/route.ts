@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from '@/db';
 import { requireUser } from '@/hooks/require-user';
 import { emailClient } from '@/lib/mailtrap';

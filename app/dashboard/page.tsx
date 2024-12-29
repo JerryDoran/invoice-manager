@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { signOut } from '@/auth';
 import { DashboardCards } from '@/components/dashboard-cards';
 import { requireUser } from '@/hooks/require-user';
 import { InvoiceChart } from './_components/invoice-chart';

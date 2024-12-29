@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import prisma from '@/db';
 import { requireUser } from '@/hooks/require-user';
 import { redirect } from 'next/navigation';

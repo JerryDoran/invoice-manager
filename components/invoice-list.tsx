@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InvoiceActions } from '@/app/dashboard/_components/invoice-actions';
 import {
   Table,

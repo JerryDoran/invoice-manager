@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use server';
 
 import { parseWithZod } from '@conform-to/zod';
@@ -12,7 +11,6 @@ export async function onboardUserAction(
   formData: FormData
 ) {
   const session = await requireUser();
-
 
   const submission = parseWithZod(formData, {
     schema: onboardingSchema,

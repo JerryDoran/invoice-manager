@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { redirect } from 'next/navigation';
 import { requireUser } from '@/hooks/require-user';
 import Link from 'next/link';
