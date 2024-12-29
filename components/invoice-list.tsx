@@ -35,7 +35,7 @@ async function getInvoices(userId: string) {
   return data;
 }
 export async function InvoiceList() {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
   const session = await requireUser();
   const invoices = await getInvoices(session.user?.id as string);
   return (

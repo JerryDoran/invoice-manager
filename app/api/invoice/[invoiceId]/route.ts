@@ -209,7 +209,7 @@ export async function GET(
   // Total amount
   pdf.setFontSize(11);
   pdf.setFont('helvetica', 'bold');
-  pdf.text(`SubTotal (${data.currency}):`, 4.8, startY + lineHeight * 15);
+  pdf.text(`Total (${data.currency}):`, 4.8, startY + lineHeight * 15);
   pdf.text(
     `${formatCurrency({
       amount: data.total,
@@ -219,21 +219,21 @@ export async function GET(
     startY + lineHeight * 15
   );
 
-  pdf.setFontSize(12);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text(`Total (${data.currency}):`, 5, startY + lineHeight * 17);
-  pdf.text(
-    `${formatCurrency({
-      amount: data.total * 1.15,
-      currency: data.currency as any,
-    })}`,
-    6.25,
-    startY + lineHeight * 17
-  );
+  // pdf.setFontSize(12);
+  // pdf.setFont('helvetica', 'bold');
+  // pdf.text(`Total (${data.currency}):`, 5, startY + lineHeight * 17);
+  // pdf.text(
+  //   `${formatCurrency({
+  //     amount: data.total * 1.15,
+  //     currency: data.currency as any,
+  //   })}`,
+  //   6.25,
+  //   startY + lineHeight * 17
+  // );
 
   // sales tax note
-  pdf.setFontSize(8);
-  pdf.text('Invoice amount includes 15% sales tax', 5.2, 3.72);
+  // pdf.setFontSize(8);
+  // pdf.text('Invoice amount includes 15% sales tax', 5.2, 3.72);
 
   // note
   if (data.note) {

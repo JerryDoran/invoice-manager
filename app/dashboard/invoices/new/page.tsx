@@ -3,6 +3,7 @@ import { CreateInvoiceForm } from '../../_components/invoice-form';
 import prisma from '@/db';
 
 async function getUserData(userId: string) {
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
   const data = await prisma.user.findUnique({
     where: {
       id: userId,
